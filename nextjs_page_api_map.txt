@@ -1,0 +1,175 @@
+AXIOM NEWS VIETNAM — NEXT.JS PAGE + API MAP (v1)
+
+----------------------------------------
+FRONTEND PAGES (SEO-First Newsroom)
+----------------------------------------
+
+/  
+Home page
+Sections:
+- Breaking (HIGH confidence fact_cards only)
+- Latest Explainers (video cards first)
+- Live Wire feed (most recent fact_cards)
+- Global → Vietnam Impact section
+- Daily Wrap preview
+- Weekly Outlook preview
+
+Rules:
+- No homepage confidence meter
+- Per-item confidence label always shown
+- Show version_id in small footer text
+
+
+/live  
+Live Wire page (facts-only feed)
+
+- Chronological list of fact_cards
+- Filter toggle: VN / GLOBAL
+- Filter toggle: EN / VI
+- Badge for confidence: HIGH / MED / DEV
+- “Developing” label if confidence_level = DEV
+
+
+/explains  
+Explainers page
+
+- Video cards (if video_url exists)
+- Text fallback if video not yet rendered
+- Display:
+  - Script summary
+  - Confidence score (0–1)
+  - What we know
+  - What we don’t know
+  - Version_id
+
+
+/story/[cluster_id]  
+Story detail page (canonical SEO page)
+
+Displays full timeline for a cluster:
+
+- Latest fact_card
+- Historical fact_card updates (version history)
+- Explainer (if exists)
+- Source links
+- Correction notices (if any)
+- Version metadata
+
+This is the canonical link for social sharing.
+
+
+/digest/daily  
+Daily Wrap archive
+
+- Reverse chronological list
+- 5–10 structured items per digest
+- EN primary, VI toggle optional
+
+
+/digest/weekly  
+Weekly Outlook archive
+
+- Monitoring list
+- Trigger conditions
+- No predictions, no advocacy
+
+
+/methodology  
+Transparency page
+
+Explains:
+- Source tiers (1/2/3)
+- Confidence labels (HIGH/MED/DEV)
+- Explainer gating criteria
+- Scope exclusions (no politics/opinion)
+- Versioning system
+
+
+/corrections  
+Public corrections log
+
+- List of corrections entries
+- Shows:
+  - item_type (fact/explainer)
+  - reason
+  - old_version_id
+  - new_version_id
+  - timestamp
+
+
+/about  
+About AXIOM
+
+- AI disclosure
+- Scope explanation
+- Non-endorsement statement
+- Contact email (optional)
+
+----------------------------------------
+API ROUTES (Server-side)
+----------------------------------------
+
+GET /api/facts?lang=EN&limit=50
+
+Returns:
+- Latest fact_cards
+- Sorted by published_at DESC
+- Filterable by language
+
+
+GET /api/explainers?lang=EN&limit=30
+
+Returns:
+- Latest explainers
+- Includes video_url if available
+- Sorted by published_at DESC
+
+
+GET /api/story?id=<cluster_id>&lang=EN
+
+Returns:
+- events_clustered record
+- All related fact_cards (timeline)
+- Explainer (if exists)
+- Corrections
+
+
+GET /api/digest?kind=daily&lang=EN&limit=30
+
+Returns:
+- Daily or weekly digests
+
+
+----------------------------------------
+RENDERING RULES
+----------------------------------------
+
+- English is canonical.
+- Vietnamese toggle switches to lang=VI.
+- If VI not available → fallback to EN with note.
+- Confidence label always displayed.
+- Version_id displayed in small muted text.
+- Breaking banner only if:
+    is_breaking = true
+    AND confidence_level = HIGH
+
+----------------------------------------
+PUBLISHING RULES
+----------------------------------------
+
+- Fact cards publish continuously.
+- Explainers capped (recommended 6–10/day).
+- Developing stories clearly labeled.
+- No political endorsements.
+- No moral framing.
+- No motive speculation.
+
+----------------------------------------
+INFRASTRUCTURE NOTES
+----------------------------------------
+
+- Website is canonical source.
+- Social posts always link back to /story/[cluster_id].
+- Supabase is single source of truth.
+- Make.com handles automation.
+- Validator blocks unsafe content before publish.
