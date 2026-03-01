@@ -1,0 +1,3 @@
+https://ptilyxsdohzprwwnuuxj.supabase.co
+sb_publishable_U0vdKX5Su24b68TXylsc7g_wDAvdRbL
+postgresql://postgres:[YOUR-PASSWORD]@db.ptilyxsdohzprwwnuuxj.supabase.co:5432/postgres	
